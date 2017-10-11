@@ -2,7 +2,7 @@
 #include <string.h>
 #include "serpent-core.c"
 
-char* ptolemeu_serpent_enc(char* text, char* key)
+char* ptolemy_serpent_enc(char* text, char* key)
 {
     char* cryptogram = malloc((strlen(text)+1)*sizeof(char));
     WORD text_w[4], cryptogram_w[4], key_w[8];
@@ -13,7 +13,7 @@ char* ptolemeu_serpent_enc(char* text, char* key)
     return cryptogram;
 }
 
-char* ptolemeu_serpent_dec(char* cryptogram, char* key)
+char* ptolemy_serpent_dec(char* cryptogram, char* key)
 {
     char* text = malloc((strlen(cryptogram)+1)*sizeof(char));
     WORD text_w[4], cryptogram_w[4], key_w[8];

@@ -7,14 +7,6 @@
 
 int main(int argc, char* argv[])
 {
-    /*char* cryptogram = malloc((strlen(text)+1)*sizeof(char));
-    WORD text_w[4], cryptogram_w[4], key_w[8];
-    stringToWords(text, text_w, 4);
-    stringToWords(key, key_w, 8);
-    doOneBlockViaNIST(text_w, key, cryptogram_w, DIR_ENCRYPT, FALSE);
-    wordsToString(cryptogram_w,4,cryptogram);
-    return cryptogram;*/
-
     cipherInstance *cipher	= malloc(sizeof(cipherInstance));
     keyInstance *key 		= malloc(sizeof(keyInstance));
     BYTE *input 		= malloc(sizeof(BYTE[16]));

@@ -1,0 +1,47 @@
+Algorithm: 
+    Serpent
+
+Principal submitter: 
+    Ross J Anderson
+    University of Cambridge Computer Laboratory
+    New Museums Site, Pembroke Street
+    Cambridge CB2 3QG, United Kingdom
+    
+    Ross.Anderson@cl.cam.ac.uk
+    Phone: +44 1223 33 47 33
+    Fax: +44 1223 33 46 78
+
+Auxiliary submitters:
+    Eli Biham, Lars R Knudsen
+
+Inventors:
+    Ross J Anderson, Eli Biham, Lars R Knudsen
+
+Owners:
+    Ross J Anderson, Eli Biham, Lars R Knudsen
+
+Backup point of contact:
+    Lars R Knudsen
+    Department of Informatics 
+    University of Bergen 
+    Hoyteknologisenteret 
+    N-5020 Bergen 
+    Norway 
+    
+    lars.knudsen@ii.uib.no
+    Phone: +47 55 58 41 57
+    Fax: +47 55 58 41 99 
+
+
+
+------------------------------------------------------------
+
+Summary of floppies in the submission
+
+Floppy 1: unoptimised ANSI C reference implementation and code for KAT/MCT
+Floppy 2: optimised ANSI C implementation and code for KAT/MCT
+Floppy 3: optimised Java implementation and code for KAT/MCT
+Floppy 4: text files with results of KAT/MCT
+Floppy 5: algorithm specification and supporting documentation
+
+

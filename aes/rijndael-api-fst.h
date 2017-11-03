@@ -76,8 +76,8 @@ typedef struct {
     int   keyLen;                   /* Length of the key  */
     char  keyMaterial[MAX_KEY_SIZE+1];  /* Raw key data in ASCII, e.g., user input or KAT values */
 	int   Nr;                       /* key-length-dependent number of rounds */
-	u32   rk[4*(MAXNR + 1)];        /* key schedule */
-	u32   ek[4*(MAXNR + 1)];        /* CFB1 key schedule (encryption only) */
+	un32   rk[4*(MAXNR + 1)];        /* key schedule */
+	un32   ek[4*(MAXNR + 1)];        /* CFB1 key schedule (encryption only) */
 } keyInstance;
 
 /*  The structure for cipher information */

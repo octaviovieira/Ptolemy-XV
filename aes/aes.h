@@ -5,33 +5,72 @@
 #include "./rijndael-alg-fst.c"
 #include "./rijndael-alg-fst.h"
 
+BYTE* hex_str_to_str( BYTE* hex_str, int len )
+{
+    int i,j;
+    BYTE* str = malloc(sizeof(BYTE[len*2+1]));
+    strcpy(str,"");
+    for( i=0, j=0; i < len; i++, j=j+2 )
+        sprintf(str,"%s%02x", str, hex_str[i]);
+    return str;
+}
+
+BYTE* str_to_hex_str( BYTE* str )
+{
+    int i, j, tam=strlen(str);
+    BYTE aux[3];
+    BYTE* hex = malloc(sizeof(BYTE[tam/2+1]));
+    aux[2]='\0';
+    for( i=0, j=0; i < tam-1; i=i+2, j++ )
+    {
+        aux[0]=str[i];
+        aux[1]=str[i+1];
+        hex[j]=strtol(aux,NULL,16);
+    }
+    hex[j]='\0';
+
+    return hex;
+}
+
 char* ptolemy_aes_enc(char* text, char* key)
 {
+    //text = str_to_hex_str( text );
     cipherInstance *cipher	= malloc(sizeof(cipherInstance));
     keyInstance *keyI 		= malloc(sizeof(keyInstance));
-    BYTE *input 		= text;
-    BYTE *outBuffer 		= malloc(sizeof(BYTE[16]));
+    BYTE *input 		    = text;
+    BYTE *outBuffer 		= malloc(sizeof(BYTE[17]));
     int inputLength 		= 128;
 
-    strcpy(keyI->keyMaterial, key);    
+    strcpy(keyI->keyMaterial, key);
     keyI->keyLen 		= 128;
-    keyI->direction 		= DIR_ENCRYPT;
-    
+    keyI->direction 	= DIR_ENCRYPT;
+
     cipher->mode 		= MODE_ECB;
 
     makeKey(keyI, DIR_ENCRYPT, inputLength, keyI->keyMaterial);
     blockEncrypt(cipher, keyI, input, inputLength, outBuffer);
-    
+
     return outBuffer;
+    //return hex_str_to_str( outBuffer , 16 );
 }
 
 char* ptolemy_aes_dec(char* cryptogram, char* key)
 {
-    /*char* text = malloc((strlen(cryptogram)+1)*sizeof(char));
-    WORD text_w[4], cryptogram_w[4], key_w[8];
-    stringToWords(cryptogram, cryptogram_w, 4);
-    stringToWords(key, key_w, 8);
-    doOneBlockViaNIST(cryptogram_w, key, text_w, DIR_DECRYPT, FALSE);
-    wordsToString(text_w,4,text);
-    return text;*/
+    cryptogram = str_to_hex_str( cryptogram );
+    cipherInstance *cipher	= malloc(sizeof(cipherInstance));
+    keyInstance *keyI 		= malloc(sizeof(keyInstance));
+    BYTE *input 		    = cryptogram;
+    BYTE *outBuffer 		= malloc(sizeof(BYTE[16]));
+    int inputLength 		= 128;
+
+    strcpy(keyI->keyMaterial, key);
+    keyI->keyLen 		= 128;
+    keyI->direction 	= DIR_DECRYPT;
+
+    cipher->mode 		= MODE_ECB;
+
+    makeKey(keyI, DIR_DECRYPT, inputLength, keyI->keyMaterial);
+    blockDecrypt(cipher, keyI, input, inputLength, outBuffer);
+
+    return hex_str_to_str( outBuffer ,16);
 }

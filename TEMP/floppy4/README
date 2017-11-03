@@ -1,0 +1,15 @@
+Submitter: Ross J Anderson
+Algorithm: SERPENT
+
+This floppy diskette (#4) contains the following files:
+
+ecb_vt.txt: 	Results of Known Answer Test, variable text
+ecb_vk.txt: 	Results of Known Answer Test, variable key
+
+ecb_e_m.txt: 	Results of Monte Carlo Test, ECB Encrypt
+ecb_d_m.txt:    Results of Monte Carlo Test, ECB Decrypt
+cbc_e_m.txt: 	Results of Monte Carlo Test, CBC Encrypt
+cbc_d_m.txt: 	Results of Monte Carlo Test, CBC Decrypt
+
+ecb_tbl.txt:	Results of S box entry tests
+ecv_iv.txt:     Results of intermediate value tests

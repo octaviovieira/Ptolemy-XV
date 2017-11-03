@@ -46,7 +46,7 @@ int makeKey(keyInstance *key, BYTE direction, int keyLen, char *keyMaterial) {
 	int i;
 	char *keyMat;
 	u8 cipherKey[MAXKB];
-	
+
 	if (key == NULL) {
 		return BAD_KEY_INSTANCE;
 	}
@@ -77,13 +77,13 @@ int makeKey(keyInstance *key, BYTE direction, int keyLen, char *keyMaterial) {
 		else if ((t >= 'a') && (t <= 'f')) v = (t - 'a' + 10) << 4;
 		else if ((t >= 'A') && (t <= 'F')) v = (t - 'A' + 10) << 4;
 		else return BAD_KEY_MAT;
-		
+
 		t = *keyMat++;
 		if ((t >= '0') && (t <= '9')) v ^= (t - '0');
 		else if ((t >= 'a') && (t <= 'f')) v ^= (t - 'a' + 10);
 		else if ((t >= 'A') && (t <= 'F')) v ^= (t - 'A' + 10);
 		else return BAD_KEY_MAT;
-		
+
 		cipherKey[i] = (u8)v;
 	}
 	if (direction == DIR_ENCRYPT) {
@@ -111,13 +111,13 @@ int cipherInit(cipherInstance *cipher, BYTE mode, char *IV) {
 			else if ((t >= 'a') && (t <= 'f')) j = (t - 'a' + 10) << 4;
 			else if ((t >= 'A') && (t <= 'F')) j = (t - 'A' + 10) << 4;
 			else return BAD_CIPHER_INSTANCE;
-		
+
 			t = IV[2*i+1];
 			if ((t >= '0') && (t <= '9')) j ^= (t - '0');
 			else if ((t >= 'a') && (t <= 'f')) j ^= (t - 'a' + 10);
 			else if ((t >= 'A') && (t <= 'F')) j ^= (t - 'A' + 10);
 			else return BAD_CIPHER_INSTANCE;
-			
+
 			cipher->IV[i] = (u8)j;
 		}
 	} else {
@@ -141,7 +141,7 @@ int blockEncrypt(cipherInstance *cipher, keyInstance *key,
 	}
 
 	numBlocks = inputLen/128;
-	
+
 	switch (cipher->mode) {
 	case MODE_ECB:
 		for (i = numBlocks; i > 0; i--) {
@@ -150,14 +150,14 @@ int blockEncrypt(cipherInstance *cipher, keyInstance *key,
 			outBuffer += 16;
 		}
 		break;
-		
+
 	case MODE_CBC:
 		iv = cipher->IV;
 		for (i = numBlocks; i > 0; i--) {
-			((u32*)block)[0] = ((u32*)input)[0] ^ ((u32*)iv)[0];
-			((u32*)block)[1] = ((u32*)input)[1] ^ ((u32*)iv)[1];
-			((u32*)block)[2] = ((u32*)input)[2] ^ ((u32*)iv)[2];
-			((u32*)block)[3] = ((u32*)input)[3] ^ ((u32*)iv)[3];
+			((un32*)block)[0] = ((un32*)input)[0] ^ ((un32*)iv)[0];
+			((un32*)block)[1] = ((un32*)input)[1] ^ ((un32*)iv)[1];
+			((un32*)block)[2] = ((un32*)input)[2] ^ ((un32*)iv)[2];
+			((un32*)block)[3] = ((un32*)input)[3] ^ ((un32*)iv)[3];
 			rijndaelEncrypt(key->rk, key->Nr, block, outBuffer);
 			iv = outBuffer;
 			input += 16;
@@ -185,7 +185,7 @@ int blockEncrypt(cipherInstance *cipher, keyInstance *key,
 	default:
 		return BAD_CIPHER_STATE;
 	}
-	
+
 	return 128*numBlocks;
 }
 
@@ -231,10 +231,10 @@ int padEncrypt(cipherInstance *cipher, keyInstance *key,
 	case MODE_CBC:
 		iv = cipher->IV;
 		for (i = numBlocks; i > 0; i--) {
-			((u32*)block)[0] = ((u32*)input)[0] ^ ((u32*)iv)[0];
-			((u32*)block)[1] = ((u32*)input)[1] ^ ((u32*)iv)[1];
-			((u32*)block)[2] = ((u32*)input)[2] ^ ((u32*)iv)[2];
-			((u32*)block)[3] = ((u32*)input)[3] ^ ((u32*)iv)[3];
+			((un32*)block)[0] = ((un32*)input)[0] ^ ((un32*)iv)[0];
+			((un32*)block)[1] = ((un32*)input)[1] ^ ((un32*)iv)[1];
+			((un32*)block)[2] = ((un32*)input)[2] ^ ((un32*)iv)[2];
+			((un32*)block)[3] = ((un32*)input)[3] ^ ((un32*)iv)[3];
 			rijndaelEncrypt(key->rk, key->Nr, block, outBuffer);
 			iv = outBuffer;
 			input += 16;
@@ -282,15 +282,15 @@ int blockDecrypt(cipherInstance *cipher, keyInstance *key,
 			outBuffer += 16;
 		}
 		break;
-		
+
 	case MODE_CBC:
 		iv = cipher->IV;
 		for (i = numBlocks; i > 0; i--) {
 			rijndaelDecrypt(key->rk, key->Nr, input, block);
-			((u32*)block)[0] ^= ((u32*)iv)[0];
-			((u32*)block)[1] ^= ((u32*)iv)[1];
-			((u32*)block)[2] ^= ((u32*)iv)[2];
-			((u32*)block)[3] ^= ((u32*)iv)[3];
+			((un32*)block)[0] ^= ((un32*)iv)[0];
+			((un32*)block)[1] ^= ((un32*)iv)[1];
+			((un32*)block)[2] ^= ((un32*)iv)[2];
+			((un32*)block)[3] ^= ((un32*)iv)[3];
 			memcpy(cipher->IV, input, 16);
 			memcpy(outBuffer, block, 16);
 			input += 16;
@@ -318,7 +318,7 @@ int blockDecrypt(cipherInstance *cipher, keyInstance *key,
 	default:
 		return BAD_CIPHER_STATE;
 	}
-	
+
 	return 128*numBlocks;
 }
 
@@ -362,15 +362,15 @@ int padDecrypt(cipherInstance *cipher, keyInstance *key,
 		}
 		memcpy(outBuffer, block, 16 - padLen);
 		break;
-		
+
 	case MODE_CBC:
 		/* all blocks but last */
 		for (i = numBlocks - 1; i > 0; i--) {
 			rijndaelDecrypt(key->rk, key->Nr, input, block);
-			((u32*)block)[0] ^= ((u32*)cipher->IV)[0];
-			((u32*)block)[1] ^= ((u32*)cipher->IV)[1];
-			((u32*)block)[2] ^= ((u32*)cipher->IV)[2];
-			((u32*)block)[3] ^= ((u32*)cipher->IV)[3];
+			((un32*)block)[0] ^= ((un32*)cipher->IV)[0];
+			((un32*)block)[1] ^= ((un32*)cipher->IV)[1];
+			((un32*)block)[2] ^= ((un32*)cipher->IV)[2];
+			((un32*)block)[3] ^= ((un32*)cipher->IV)[3];
 			memcpy(cipher->IV, input, 16);
 			memcpy(outBuffer, block, 16);
 			input += 16;
@@ -378,10 +378,10 @@ int padDecrypt(cipherInstance *cipher, keyInstance *key,
 		}
 		/* last block */
 		rijndaelDecrypt(key->rk, key->Nr, input, block);
-		((u32*)block)[0] ^= ((u32*)cipher->IV)[0];
-		((u32*)block)[1] ^= ((u32*)cipher->IV)[1];
-		((u32*)block)[2] ^= ((u32*)cipher->IV)[2];
-		((u32*)block)[3] ^= ((u32*)cipher->IV)[3];
+		((un32*)block)[0] ^= ((un32*)cipher->IV)[0];
+		((un32*)block)[1] ^= ((un32*)cipher->IV)[1];
+		((un32*)block)[2] ^= ((un32*)cipher->IV)[2];
+		((un32*)block)[3] ^= ((un32*)cipher->IV)[3];
 		padLen = block[15];
 		if (padLen <= 0 || padLen > 16) {
 			return BAD_DATA;
@@ -393,11 +393,11 @@ int padDecrypt(cipherInstance *cipher, keyInstance *key,
 		}
 		memcpy(outBuffer, block, 16 - padLen);
 		break;
-	
+
 	default:
 		return BAD_CIPHER_STATE;
 	}
-	
+
 	return 16*numBlocks - padLen;
 }
 
@@ -406,7 +406,7 @@ int padDecrypt(cipherInstance *cipher, keyInstance *key,
  *	cipherUpdateRounds:
  *
  *	Encrypts/Decrypts exactly one full block a specified number of rounds.
- *	Only used in the Intermediate Value Known Answer Test.	
+ *	Only used in the Intermediate Value Known Answer Test.
  *
  *	Returns:
  *		TRUE - on success
@@ -426,17 +426,17 @@ int cipherUpdateRounds(cipherInstance *cipher, keyInstance *key,
 	case DIR_ENCRYPT:
 		rijndaelEncryptRound(key->rk, key->Nr, block, rounds);
 		break;
-		
+
 	case DIR_DECRYPT:
 		rijndaelDecryptRound(key->rk, key->Nr, block, rounds);
 		break;
-		
+
 	default:
 		return BAD_KEY_DIR;
-	} 
+	}
 
 	memcpy(outBuffer, block, 16);
-	
+
 	return TRUE;
 }
 #endif /* INTERMEDIATE_VALUE_KAT */

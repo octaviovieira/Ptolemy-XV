@@ -2,22 +2,34 @@
 #include <time.h>
 #include "rtc.h"
 
-unsigned long int cycles_clocks_for_execution( void*(*enc_dec_rot)(void*,void*), void* arg1, void* arg2, void** resp )
+#define MEGA_SRAM 8192
+
+static int free_sram()
+{
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int)&v-(__brkval ==0?(int)&__heap_start:(int) __brkval);
+}
+
+unsigned int memory_usage(void)
+{
+    return MEGA_SRAM - free_sram();
+}
+
+unsigned long int cycles_clocks_for_execution( void*(*rot)(void) )
 {
     unsigned long int ti, tf;
     ti = micros();
-    if( resp != NULL ) *resp = enc_dec_rot(arg1,arg2);
-    else enc_dec_rot(arg1,arg2);
+    rot();
     tf = micros();
     return (tf - ti) * clockCyclesPerMicrosecond();
 }
 
-unsigned long int time_for_execution( void*(*enc_dec_rot)(void*,void*), void* arg1, void* arg2, void** resp )
+unsigned long int time_for_execution( void*(*rot)(void) )
 {
     unsigned long int ti, tf;
     ti = rtc_get_time();
-    if( resp != NULL ) *resp = enc_dec_rot(arg1,arg2);
-    else enc_dec_rot(arg1,arg2);
+    rot();
     tf = rtc_get_time();
-    return (tf - ti) * 1000;
+    return (tf - ti);
 }

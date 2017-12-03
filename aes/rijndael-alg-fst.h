@@ -32,7 +32,7 @@
 
 typedef unsigned char	u8;
 typedef unsigned short	u16;
-typedef unsigned int	un32;
+typedef unsigned long int	un32;
 
 int rijndaelKeySetupEnc(un32 rk[/*4*(Nr + 1)*/], const u8 cipherKey[], int keyBits);
 int rijndaelKeySetupDec(un32 rk[/*4*(Nr + 1)*/], const u8 cipherKey[], int keyBits);

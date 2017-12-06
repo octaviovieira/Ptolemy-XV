@@ -1,7 +1,7 @@
 #include <Thread.h>
 #include <ThreadController.h>
-#include "../analise/analise.h"
-#include "../aes/aes.h"
+#include "../../../analise/analise.h"
+#include "../../../aes/aes.h"
 
 ThreadController schedule;
 Thread memory_monitor;
@@ -14,13 +14,13 @@ void show_memory_consumption()
 
 void algorithm()
 {
-    BYTE* ct = ptolemy_aes_dec("00000000000000000000000000000000", "80000000000000000000000000000000");
+  BYTE* ct = ptolemy_aes_dec("00000000000000000000000000000000", "80000000000000000000000000000000");
 	free(ct);
 }
 
 void setup() {
 
-  Serial.begin(9600);;
+  Serial.begin(9600);
 
   memory_monitor.setInterval(50);
   memory_monitor.onRun( show_memory_consumption );

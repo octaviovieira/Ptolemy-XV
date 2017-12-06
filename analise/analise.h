@@ -1,8 +1,8 @@
 
 #include <time.h>
-#include "rtc.h"
+//#include "rtc.h"
 
-#define MEGA_SRAM 8192
+/*#define MEGA_SRAM 8192
 
 static int free_sram()
 {
@@ -14,9 +14,9 @@ static int free_sram()
 unsigned int memory_usage(void)
 {
     return MEGA_SRAM - free_sram();
-}
+}*/
 
-unsigned long int cycles_clocks_for_execution( void*(*rot)(void) )
+unsigned long int cycles_of_clocks_for_execution( void(*rot)(void) )
 {
     unsigned long int ti, tf;
     ti = micros();
@@ -25,11 +25,11 @@ unsigned long int cycles_clocks_for_execution( void*(*rot)(void) )
     return (tf - ti) * clockCyclesPerMicrosecond();
 }
 
-unsigned long int time_for_execution( void*(*rot)(void) )
+unsigned long int time_for_execution( void(*rot)(void) )
 {
     unsigned long int ti, tf;
-    ti = rtc_get_time();
+    ti = millis();
     rot();
-    tf = rtc_get_time();
+    tf = millis();
     return (tf - ti);
 }

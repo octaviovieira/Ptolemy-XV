@@ -34,11 +34,8 @@ BYTE* str_to_hex_str( BYTE* str )
 
 BYTE* ptolemy_aes_enc(BYTE* text, BYTE* key)
 {
-//    Serial.println( text );
+    BYTE* p = text, *tc;
     text = str_to_hex_str( text );
-//    printHex( text ); Serial.println();
-//    text = hex_str_to_str( text, 16 );
-//    Serial.println( text );
 
     cipherInstance *cipher	= malloc(sizeof(cipherInstance));
     keyInstance *keyI 		= malloc(sizeof(keyInstance));
@@ -55,14 +52,22 @@ BYTE* ptolemy_aes_enc(BYTE* text, BYTE* key)
     makeKey(keyI, DIR_ENCRYPT, inputLength, keyI->keyMaterial);
     blockEncrypt(cipher, keyI, input, inputLength, outBuffer);
 
-    //printHex( outBuffer );
-    //return outBuffer;
-    return hex_str_to_str( outBuffer , 16 );
+    tc = hex_str_to_str( outBuffer , 16 );
+    
+    //free(p);
+    free(cipher);
+    free(keyI);
+    free(input);
+    free(outBuffer);
+    
+    return tc;
 }
 
 BYTE* ptolemy_aes_dec(BYTE* cryptogram, BYTE* key)
 {
+    BYTE* p = cryptogram, *tp;
     cryptogram = str_to_hex_str( cryptogram );
+
     cipherInstance *cipher	= malloc(sizeof(cipherInstance));
     keyInstance *keyI 		= malloc(sizeof(keyInstance));
     BYTE *input 		    = cryptogram;
@@ -78,5 +83,13 @@ BYTE* ptolemy_aes_dec(BYTE* cryptogram, BYTE* key)
     makeKey(keyI, DIR_DECRYPT, inputLength, keyI->keyMaterial);
     blockDecrypt(cipher, keyI, input, inputLength, outBuffer);
 
-    return hex_str_to_str( outBuffer ,16);
+    tp = hex_str_to_str( outBuffer ,16 );
+
+    //free(p);
+    free(cipher);
+    free(keyI);
+    free(input);
+    free(outBuffer);
+
+    return tp;
 }

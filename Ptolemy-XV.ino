@@ -1,53 +1,59 @@
+#include "analises/time/block/serp_dec.h"
+/*#include <SD.h>
 #include <SPI.h>
-#include <SD.h>
 
 File myFile;
-
+int pinCS = 53; // Pin 10 on Arduino Uno
 void setup() {
-  // Open serial communications and wait for port to open:
+    
   Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
+  pinMode(pinCS, OUTPUT);
+  digitalWrite(pinCS,HIGH);
+  
+  // SD Card Initialization
+
+  while(!SD.begin(pinCS))
+    Serial.println("Tentando reconectar");
+  
+  if (SD.begin(pinCS))
+  {
+    Serial.println("SD card is ready to use.");
+  } else
+  {
+    Serial.println("SD card initialization failed");
+    return;
   }
-
-
-  Serial.print("Initializing SD card...");
-
-  if (!SD.begin(4)) {
-    Serial.println("initialization failed!");
-    while (1);
+  
+  // Create/Open file 
+  myFile = SD.open("test.txt", FILE_WRITE);
+  
+  // if the file opened okay, write to it:
+  if (myFile) {
+    Serial.println("Writing to file...");
+    // Write to file
+    myFile.println("Testing text 1, 2 ,3...");
+    myFile.close(); // close the file
+    Serial.println("Done.");
   }
-  Serial.println("initialization done.");
-
-  if (SD.exists("example.txt")) {
-    Serial.println("example.txt exists.");
-  } else {
-    Serial.println("example.txt doesn't exist.");
+  // if the file didn't open, print an error:
+  else {
+    Serial.println("error opening test.txt");
   }
-
-  // open a new file and immediately close it:
-  Serial.println("Creating example.txt...");
-  myFile = SD.open("example.txt", FILE_WRITE);
-  myFile.close();
-
-  // Check to see if the file exists:
-  if (SD.exists("example.txt")) {
-    Serial.println("example.txt exists.");
-  } else {
-    Serial.println("example.txt doesn't exist.");
+  // Reading the file
+  myFile = SD.open("test.txt");
+  if (myFile) {
+    Serial.println("Read:");
+    // Reading the whole file
+    while (myFile.available()) {
+      Serial.write(myFile.read());
+   }
+    myFile.close();
   }
-
-  // delete the file:
-  Serial.println("Removing example.txt...");
-  SD.remove("example.txt");
-
-  if (SD.exists("example.txt")) {
-    Serial.println("example.txt exists.");
-  } else {
-    Serial.println("example.txt doesn't exist.");
+  else {
+    Serial.println("error opening test.txt");
   }
+  
 }
-
 void loop() {
-  // nothing happens after setup finishes.
-}
+  // empty
+}*/

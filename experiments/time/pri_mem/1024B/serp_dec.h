@@ -1,5 +1,6 @@
-#include "../../../analise/analise.h"
-#include "../../../serpent/serpent.h"
+#include "../../../../analise/analise.h"
+#include "../../../../serpent/serpent.h"
+#include "../../../mem_data.h"
 
 void algorithm(void)
 {

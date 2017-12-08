@@ -1,7 +1,7 @@
 #include <Thread.h>
 #include <ThreadController.h>
 #include "../../../../analise/analise.h"
-#include "../../../../aes/aes.h"
+#include "../../../../serpent/serpent.h"
 #include "../../../mem_data.h"
 
 ThreadController schedule;

@@ -1,5 +1,6 @@
-#include "../../../analise/analise.h"
-#include "../../../aes/aes.h"
+#include "../../../../analise/analise.h"
+#include "../../../../aes/aes.h"
+#include "../../../mem_data.h"
 
 void algorithm(void)
 {
